@@ -1,0 +1,6 @@
+---
+applications:
+- name: gs-rest-service-concourse
+  memory: 1G
+  instances: 1
+  buildpack: java_buildpack
