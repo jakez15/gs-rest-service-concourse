@@ -8,6 +8,7 @@ image_resource:
     tag: git   
     
 inputs:
+  - name: source-repo
   - name: minio-s3-bucket-pom
   
 outputs:
