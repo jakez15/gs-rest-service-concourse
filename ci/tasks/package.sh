@@ -15,9 +15,11 @@ pushd source-repo
 	cp target/gs-rest-service-concourse-${VERSION}.jar  ../build-output/.
 	
 	
+	ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+	
 	git tag ${VERSION}
 	
-	git push origin ${VERSION}
+	git push origin ${VERSION} 
 	
 popd
 
