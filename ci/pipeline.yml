@@ -104,8 +104,8 @@ jobs:
 #      - task: pom-push
 #        privileged: true
 #        file: source-repo/ci/tasks/pom-push.yml
-      - put: source-repo
-        params: {repository: source-repo-update-pom}
+#      - put: source-repo
+#        params: {repository: source-repo-update-pom}
           
         
     

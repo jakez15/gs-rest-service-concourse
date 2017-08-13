@@ -5,3 +5,4 @@
 .classpath
 /.metadata/
 ci/pipeline_params.yml
+.DS_Store
