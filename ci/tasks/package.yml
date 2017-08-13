@@ -12,6 +12,7 @@ inputs:
 
 outputs:
   - name: build-output
+  - name: source-repo-update-tag
 
 caches:
   - path: .m2/repository

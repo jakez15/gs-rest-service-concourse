@@ -14,12 +14,9 @@ pushd source-repo
 	cp manifest.yml  ../build-output/manifest-${VERSION}.yml
 	cp target/gs-rest-service-concourse-${VERSION}.jar  ../build-output/.
 	
+	echo "dev/${VERSION}" > /tag
 	
-	ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-	
-	git tag ${VERSION}
-	
-	git push origin ${VERSION} 
+	cp -Rp . ../../source-repo-update-tag/.
 	
 popd
 

@@ -79,6 +79,11 @@ jobs:
         params: {file: build-output/manifest-*.yml}
       - put: minio-s3-bucket-pom
         params: {file: build-output/pom-*.xml}
+      - put: source-repo
+        params: 
+          repository: source-repo-update-tag
+          tag: dev/tag
+          only_tag: true
       - put: version #Prepare the version for the next iteration
         params: {file: version/number}  
     
