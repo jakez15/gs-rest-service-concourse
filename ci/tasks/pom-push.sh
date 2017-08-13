@@ -12,8 +12,8 @@ pushd minio-s3-bucket-pom
 	
 	git add pom.xml
 	
-	git commit pom.xml -m "update pom project version"	
+	git commit pom.xml -m "update pom project version"
 	
-	mv -v * ../../source-repo-update-pom/
+	cp -Rp . ../../source-repo-update-pom/
 popd
 
