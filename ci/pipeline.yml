@@ -5,6 +5,9 @@ resources:
     source:
       uri: https://github.com/jzingler/gs-rest-service-concourse.git
       branch: master
+      git_config:
+        user.name: Jake Zingler
+        user.email: jzingler@pivotal.io
   - name: version
     type: semver
     source:
