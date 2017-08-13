@@ -8,10 +8,16 @@ set -e -x
 
 pushd source-repo
 	mvn versions:set -DnewVersion=${VERSION} -Dmaven.repo.local=../.m2/repository
-	mvn clean deploy scm:tag -Dmaven.repo.local=../.m2/repository -DskipTests=true
+	mvn clean package -Dmaven.repo.local=../.m2/repository -DskipTests=true
 	
 	cp pom.xml ../build-output/pom-${VERSION}.xml
 	cp manifest.yml  ../build-output/manifest-${VERSION}.yml
 	cp target/gs-rest-service-concourse-${VERSION}.jar  ../build-output/.
+	
+	
+	git tag ${VERSION}
+	
+	git push origin ${VERSION}
+	
 popd
 

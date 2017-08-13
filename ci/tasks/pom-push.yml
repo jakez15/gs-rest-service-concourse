@@ -10,6 +10,7 @@ image_resource:
 inputs:
   - name: source-repo
   - name: minio-s3-bucket-pom
+  - name: version
   
 outputs:
   - name: source-repo-update-pom
