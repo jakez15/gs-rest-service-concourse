@@ -81,17 +81,18 @@ jobs:
   - name: cf-push
     serial: true
     plan:
-      - get: minio-s3-bucket-jar #Get the current jar file from Minio bucket
-        trigger: true
-        passed: [package-artifact]
-      - get: minio-s3-bucket-manifest #Get the current jar file from Minio bucket
-        trigger: true
-        passed: [package-artifact]
-      - get: minio-s3-bucket-pom #Get the current jar file from Minio bucket
-        trigger: true
-        passed: [package-artifact]          
-      - get: source-repo #Get Source code
-        passed: [package-artifact]
+      - aggregate: 
+        - get: minio-s3-bucket-jar #Get the current jar file from Minio bucket
+          trigger: true
+          passed: [package-artifact]
+        - get: minio-s3-bucket-manifest #Get the current jar file from Minio bucket
+          trigger: true
+          passed: [package-artifact]
+        - get: minio-s3-bucket-pom #Get the current jar file from Minio bucket
+          trigger: true
+          passed: [package-artifact]          
+        - get: source-repo #Get Source code
+          passed: [package-artifact]
 #      - put: cf-push-packaged-app
 #        params:
 #          manifest: minio-s3-bucket-manifest/manifest-*.yml
