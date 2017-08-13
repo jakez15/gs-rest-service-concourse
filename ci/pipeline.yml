@@ -41,30 +41,30 @@ resources:
       access_key_id: {{s3-access-key-id}}
       secret_access_key: {{s3-secret-access-key}}      
       disable_ssl: true          
-  - name: cf-push-packaged-app
-    type: cf
-    source:
-      api: {{cf_api}}
-      organization: {{cf_org}}
-      space: {{cf_space}}
-      username: {{cf_username}}
-      password: {{cf_password}}
-      skip_cert_check: false
+#  - name: cf-push-packaged-app
+#    type: cf
+#    source:
+#      api: {{cf_api}}
+#      organization: {{cf_org}}
+#      space: {{cf_space}}
+#      username: {{cf_username}}
+#      password: {{cf_password}}
+#      skip_cert_check: false
       
 jobs:
-  - name: unit-test
-    plan:
-    - get: source-repo
-      trigger: true
-    - task: unit-test
-      privileged: true
-      file: source-repo/ci/tasks/unit-test.yml    
+#  - name: unit-test
+#    plan:
+#    - get: source-repo
+#      trigger: true
+#    - task: unit-test
+#      privileged: true
+#      file: source-repo/ci/tasks/unit-test.yml    
   
   - name: package-artifact
     serial_groups: [version]
     plan:
       - get: source-repo #Get the current source code
-        passed: [unit-test] #If unit-test job completed then continue
+#        passed: [unit-test] #If unit-test job completed then continue
         trigger: true
       - get: version #Get version 
         params: {bump: patch} #Add 1 to semver patch 
@@ -92,10 +92,10 @@ jobs:
         passed: [package-artifact]          
       - get: source-repo #Get Source code
         passed: [package-artifact]
-      - put: cf-push-packaged-app
-        params:
-          manifest: minio-s3-bucket-manifest/manifest-*.yml
-          path: minio-s3-bucket-jar/gs-rest-service-concourse-*.jar
+#      - put: cf-push-packaged-app
+#        params:
+#          manifest: minio-s3-bucket-manifest/manifest-*.yml
+#          path: minio-s3-bucket-jar/gs-rest-service-concourse-*.jar
       - task: pom-push
         privileged: true
         file: source-repo/ci/tasks/pom-push.yml
