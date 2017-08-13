@@ -101,9 +101,9 @@ jobs:
         params:
           manifest: minio-s3-bucket-manifest/manifest-*.yml
           path: minio-s3-bucket-jar/gs-rest-service-concourse-*.jar
-      - task: pom-push
-        privileged: true
-        file: source-repo/ci/tasks/pom-push.yml
+#      - task: pom-push
+#        privileged: true
+#        file: source-repo/ci/tasks/pom-push.yml
       - put: source-repo
         params: {repository: source-repo-update-pom}
           
