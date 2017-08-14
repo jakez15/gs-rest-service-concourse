@@ -108,10 +108,10 @@ jobs:
           path: minio-s3-bucket-jar/gs-rest-service-concourse-*.jar
       
   - name: smoke-test
+    serial: true
     plan:
       - get: source-repo
         passed: [cf-push]
-        trigger: true
       - task: smoke-test
         privileged: true
         file: source-repo/ci/tasks/smoke-test.yml 
