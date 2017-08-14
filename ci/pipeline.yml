@@ -111,6 +111,7 @@ jobs:
     plan:
       - get: source-repo
         passed: [cf-push]
+        trigger: true
       - task: smoke-test
         privileged: true
         file: source-repo/ci/tasks/smoke-test.yml 

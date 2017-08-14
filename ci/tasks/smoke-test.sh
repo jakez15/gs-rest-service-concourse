@@ -3,8 +3,8 @@
 set -e -x
 
 pushd source-repo
-    
-	if [[ true == $(curl https://gs-rest-service-concourse.cfapps.io/health | jq '.status == "UP"') ]]; then
+    HEALTH=$(curl https://gs-rest-service-concourse.cfapps.io/health | jq '.status == "UP"')
+	if [[ true == $HEALTH ]]; then
 		echo "PASSED Smoke Tests"
 	else 
 		echo "FAILED Smoke Tests"
