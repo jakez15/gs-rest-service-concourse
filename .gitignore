@@ -1,0 +1,8 @@
+/target
+.settings
+.project
+
+.classpath
+/.metadata/
+ci/pipeline_params.yml
+.DS_Store

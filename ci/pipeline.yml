@@ -1,0 +1,125 @@
+---
+resources:
+  - name: source-repo
+    type: git
+    source:
+      uri: git@github.com:jzingler/gs-rest-service-concourse.git
+      branch: master
+      username: jzingler@pivotal.io
+      private_key: {{github_private_key}}        
+  - name: version
+    type: semver
+    source:
+      endpoint: http://10.0.0.10:9000
+      bucket: gs-rest-service-concourse-artifacts
+      key: current-version
+      access_key_id: {{s3-access-key-id}}
+      secret_access_key: {{s3-secret-access-key}}
+      initial_version: 0.1.0
+  - name: minio-s3-bucket-jar
+    type: s3
+    source:
+      endpoint: http://10.0.0.10:9000
+      bucket: gs-rest-service-concourse-artifacts
+      regexp: gs-rest-service-concourse-(.*).jar
+      access_key_id: {{s3-access-key-id}}
+      secret_access_key: {{s3-secret-access-key}}      
+      disable_ssl: true
+  - name: minio-s3-bucket-manifest
+    type: s3
+    source:
+      endpoint: http://10.0.0.10:9000
+      bucket: gs-rest-service-concourse-artifacts
+      regexp: manifest-(.*).yml
+      access_key_id: {{s3-access-key-id}}
+      secret_access_key: {{s3-secret-access-key}}      
+      disable_ssl: true
+  - name: minio-s3-bucket-pom
+    type: s3
+    source:
+      endpoint: http://10.0.0.10:9000
+      bucket: gs-rest-service-concourse-artifacts
+      regexp: pom-(.*).xml
+      access_key_id: {{s3-access-key-id}}
+      secret_access_key: {{s3-secret-access-key}}      
+      disable_ssl: true          
+  - name: cf-push-packaged-app
+    type: cf
+    source:
+      api: {{cf_api}}
+      organization: {{cf_org}}
+      space: {{cf_space}}
+      username: {{cf_username}}
+      password: {{cf_password}}
+      skip_cert_check: false
+      
+jobs:
+  - name: unit-test
+    plan:
+    - get: source-repo
+      trigger: true
+    - task: unit-test
+      privileged: true
+      file: source-repo/ci/tasks/unit-test.yml    
+  
+  - name: package-artifact
+    serial_groups: [version]
+    plan:
+      - get: source-repo #Get the current source code
+        passed: [unit-test] #If unit-test job completed then continue
+        trigger: true
+      - get: version 
+        params: {bump: patch} 
+      - task: package
+        privileged: true
+        file: source-repo/ci/tasks/package.yml
+      - put: minio-s3-bucket-jar
+        params: {file: build-output/gs-rest-service-concourse-*.jar}
+      - put: minio-s3-bucket-manifest
+        params: {file: build-output/manifest-*.yml}
+      - put: minio-s3-bucket-pom
+        params: {file: build-output/pom-*.xml}
+      - put: source-repo
+        params: 
+          repository: source-repo-update-tag
+          tag: source-repo-update-tag/tag
+          only_tag: true
+      - put: version
+        params: {file: version/number}  
+    
+  - name: cf-push
+    serial: true
+    plan:
+      - aggregate: 
+        - get: minio-s3-bucket-jar
+          trigger: true
+          passed: [package-artifact]
+        - get: minio-s3-bucket-manifest
+          trigger: true
+          passed: [package-artifact]
+        - get: minio-s3-bucket-pom 
+          trigger: true
+          passed: [package-artifact]          
+        - get: source-repo
+          passed: [package-artifact]
+      - put: cf-push-packaged-app
+        params:
+          manifest: minio-s3-bucket-manifest/manifest-*.yml
+          path: minio-s3-bucket-jar/gs-rest-service-concourse-*.jar
+      
+  - name: smoke-test
+    serial: true
+    plan:
+      - get: source-repo
+        passed: [cf-push]
+      - task: smoke-test
+        privileged: true
+        file: source-repo/ci/tasks/smoke-test.yml 
+#      - task: pom-push
+#        privileged: true
+#        file: source-repo/ci/tasks/pom-push.yml
+#      - put: source-repo
+#        params: {repository: source-repo-update-pom}
+          
+        
+    
