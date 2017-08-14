@@ -106,6 +106,11 @@ jobs:
         params:
           manifest: minio-s3-bucket-manifest/manifest-*.yml
           path: minio-s3-bucket-jar/gs-rest-service-concourse-*.jar
+      
+  - name: smoke-test
+    plan:
+      - get: source-repo
+        passed: [cf-push]
       - task: smoke-test
         privileged: true
         file: source-repo/ci/tasks/smoke-test.yml 
