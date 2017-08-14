@@ -82,7 +82,7 @@ jobs:
       - put: source-repo
         params: 
           repository: source-repo-update-tag
-          tag: dev/tag
+          tag: source-repo-update-tag/tag
           only_tag: true
       - put: version #Prepare the version for the next iteration
         params: {file: version/number}  

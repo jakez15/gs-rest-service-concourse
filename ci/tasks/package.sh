@@ -14,7 +14,7 @@ pushd source-repo
 	cp manifest.yml  ../build-output/manifest-${VERSION}.yml
 	cp target/gs-rest-service-concourse-${VERSION}.jar  ../build-output/.
 	
-	echo "dev/${VERSION}" > /tag
+	echo "dev/${VERSION}" > tag
 	
 	cp -Rp . ../source-repo-update-tag/.
 	
