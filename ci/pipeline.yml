@@ -68,12 +68,12 @@ jobs:
       - get: source-repo #Get the current source code
         passed: [unit-test] #If unit-test job completed then continue
         trigger: true
-      - get: version #Get version 
-        params: {bump: patch} #Add 1 to semver patch 
-      - task: package #Package artifact
+      - get: version 
+        params: {bump: patch} 
+      - task: package
         privileged: true
         file: source-repo/ci/tasks/package.yml
-      - put: minio-s3-bucket-jar #Put the jar file in Minio bucket
+      - put: minio-s3-bucket-jar
         params: {file: build-output/gs-rest-service-concourse-*.jar}
       - put: minio-s3-bucket-manifest
         params: {file: build-output/manifest-*.yml}
@@ -84,23 +84,23 @@ jobs:
           repository: source-repo-update-tag
           tag: source-repo-update-tag/tag
           only_tag: true
-      - put: version #Prepare the version for the next iteration
+      - put: version
         params: {file: version/number}  
     
   - name: cf-push
     serial: true
     plan:
       - aggregate: 
-        - get: minio-s3-bucket-jar #Get the current jar file from Minio bucket
+        - get: minio-s3-bucket-jar
           trigger: true
           passed: [package-artifact]
-        - get: minio-s3-bucket-manifest #Get the current jar file from Minio bucket
+        - get: minio-s3-bucket-manifest
           trigger: true
           passed: [package-artifact]
-        - get: minio-s3-bucket-pom #Get the current jar file from Minio bucket
+        - get: minio-s3-bucket-pom 
           trigger: true
           passed: [package-artifact]          
-        - get: source-repo #Get Source code
+        - get: source-repo
           passed: [package-artifact]
       - put: cf-push-packaged-app
         params:

@@ -17,10 +17,6 @@
 		<java.version>1.8</java.version>
 	</properties>
 
-<!-- 	<scm> -->
-<!-- 		<connection>scm:git:https://github.com:jzingler/gs-rest-service-concourse.git</connection> -->
-<!-- 	</scm> -->
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
