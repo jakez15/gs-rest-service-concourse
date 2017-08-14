@@ -16,7 +16,7 @@ pushd source-repo
 	
 	echo "dev/${VERSION}" > /tag
 	
-	cp -Rp . ../../source-repo-update-tag/.
+	cp -Rp . ../source-repo-update-tag/.
 	
 popd
 
