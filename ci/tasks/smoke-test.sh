@@ -10,9 +10,9 @@ pushd source-repo
 	echo "2"
 	HEALTH=$(curl 'https://gs-rest-service-concourse.cfapps.io/health' | jq '.status == "UP"')
 	
-	echo $HEALTH
-	
-	if [[ true == $HEALTH ]]; then
+	echo ${HEALTH}
+		
+	if [[ true == ${HEALTH} ]]; then
 		echo "PASSED Smoke Tests"
 	else 
 		echo "FAILED Smoke Tests"
